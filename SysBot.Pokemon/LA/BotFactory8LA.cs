@@ -8,7 +8,7 @@ namespace SysBot.Pokemon
         public override PokeRoutineExecutorBase CreateBot(PokeTradeHub<PA8> Hub, PokeBotState cfg) => cfg.NextRoutineType switch
         {
             PokeRoutineType.FlexTrade or PokeRoutineType.Idle
-                or PokeRoutineType.통신교환
+                or PokeRoutineType.LinkTrade
                 or PokeRoutineType.Clone
                 or PokeRoutineType.Dump
                 => new PokeTradeBotLA(Hub, cfg),
@@ -21,7 +21,7 @@ namespace SysBot.Pokemon
         public override bool SupportsRoutine(PokeRoutineType type) => type switch
         {
             PokeRoutineType.FlexTrade or PokeRoutineType.Idle
-                or PokeRoutineType.통신교환
+                or PokeRoutineType.LinkTrade
                 or PokeRoutineType.Clone
                 or PokeRoutineType.Dump
                 => true,

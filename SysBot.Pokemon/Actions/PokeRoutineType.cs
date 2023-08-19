@@ -14,7 +14,7 @@
         /// <summary> Performs the behavior of all trade bots. </summary>
         FlexTrade = 2,
         /// <summary> Performs only P2P Link Trades of specific data. </summary>
-        통신교환 = 3,
+        LinkTrade = 3,
         /// <summary> Performs a seed check without transferring data from the bot. </summary>
         SeedCheck = 4,
         /// <summary> Performs a clone operation on the partner's data, sending them a copy of what they show. </summary>

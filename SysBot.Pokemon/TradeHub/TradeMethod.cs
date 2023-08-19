@@ -8,7 +8,7 @@
         /// <summary>
         /// Trades between specific players
         /// </summary>
-        통신교환,
+        LinkTrade,
 
         /// <summary>
         /// Trades between randomly matched players

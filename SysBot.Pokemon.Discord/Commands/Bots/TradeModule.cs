@@ -20,7 +20,7 @@ namespace SysBot.Pokemon.Discord
         [RequireSudo]
         public async Task GetTradeListAsync()
         {
-            string msg = Info.GetTradeList(PokeRoutineType.통신교환);
+            string msg = Info.GetTradeList(PokeRoutineType.LinkTrade);
             var embed = new EmbedBuilder();
             embed.AddField(x =>
             {
@@ -202,7 +202,7 @@ namespace SysBot.Pokemon.Discord
                 return;
             }
 
-            await QueueHelper<T>.AddToQueueAsync(Context, code, trainerName, sig, pk, PokeRoutineType.통신교환, PokeTradeType.Specific, usr).ConfigureAwait(false);
+            await QueueHelper<T>.AddToQueueAsync(Context, code, trainerName, sig, pk, PokeRoutineType.LinkTrade, PokeTradeType.Specific, usr).ConfigureAwait(false);
         }
     }
 }

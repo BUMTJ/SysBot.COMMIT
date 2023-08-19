@@ -21,7 +21,7 @@ namespace SysBot.Tests
         {
             var hub = new PokeTradeHub<T>(new PokeTradeHubConfig());
             var info = new TradeQueueInfo<T>(hub);
-            var queue = info.Hub.Queues.GetQueue(PokeRoutineType.통신교환);
+            var queue = info.Hub.Queues.GetQueue(PokeRoutineType.LinkTrade);
 
             var t1 = GetTestTrade(info, 1);
             var t2 = GetTestTrade(info, 2);
@@ -57,9 +57,9 @@ namespace SysBot.Tests
             first.Notifier.TradeSearching(executor, first);
             first.Notifier.TradeFinished(executor, first, new T { Species = 777 });
 
-            var status = info.CheckPosition(t1.UserID, PokeRoutineType.통신교환);
+            var status = info.CheckPosition(t1.UserID, PokeRoutineType.LinkTrade);
             status.Position.Should().Be(1); // not zero indexed
-            var count = info.UserCount(z => z.Type == PokeRoutineType.통신교환);
+            var count = info.UserCount(z => z.Type == PokeRoutineType.LinkTrade);
             count.Should().Be(3);
             queue.Count.Should().Be(3);
 
@@ -72,9 +72,9 @@ namespace SysBot.Tests
             second.Notifier.TradeSearching(executor, second);
             second.Notifier.TradeCanceled(executor, second, PokeTradeResult.트레이너가너무느림);
 
-            status = info.CheckPosition(t1.UserID, PokeRoutineType.통신교환);
+            status = info.CheckPosition(t1.UserID, PokeRoutineType.LinkTrade);
             status.Position.Should().Be(-1);
-            count = info.UserCount(z => z.Type == PokeRoutineType.통신교환);
+            count = info.UserCount(z => z.Type == PokeRoutineType.LinkTrade);
             count.Should().Be(2);
             queue.Count.Should().Be(2);
         }
@@ -109,7 +109,7 @@ namespace SysBot.Tests
         private static TradeEntry<T> GetTestTrade<T>(int tag, bool favor) where T : PKM, new()
         {
             var d3 = new PokeTradeDetail<T>(new T { Species = (ushort)tag }, new PokeTradeTrainerInfo($"{(favor ? "*" : "")}Test {tag}"), new PokeTradeLogNotifier<T>(), PokeTradeType.Specific, tag, favor);
-            return new TradeEntry<T>(d3, (ulong)tag, PokeRoutineType.통신교환, $"Test Trade {tag}");
+            return new TradeEntry<T>(d3, (ulong)tag, PokeRoutineType.LinkTrade, $"Test Trade {tag}");
         }
 
         private static void TestFavor<T>() where T : PKM, new()
@@ -117,7 +117,7 @@ namespace SysBot.Tests
             var settings = new PokeTradeHubConfig();
             var hub = new PokeTradeHub<T>(settings);
             var info = new TradeQueueInfo<T>(hub);
-            var queue = info.Hub.Queues.GetQueue(PokeRoutineType.통신교환);
+            var queue = info.Hub.Queues.GetQueue(PokeRoutineType.LinkTrade);
 
             const int count = 100;
 

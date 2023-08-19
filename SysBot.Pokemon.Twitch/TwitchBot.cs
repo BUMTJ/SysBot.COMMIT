@@ -267,7 +267,7 @@ namespace SysBot.Pokemon.Twitch
             {
                 int code = Util.ToInt32(msg);
                 var sig = GetUserSignificance(user);
-                var _ = AddToTradeQueue(user.Pokemon, code, e, sig, PokeRoutineType.통신교환, out string message);
+                var _ = AddToTradeQueue(user.Pokemon, code, e, sig, PokeRoutineType.LinkTrade, out string message);
                 client.SendMessage(Channel, message);
             }
             catch (Exception ex)
