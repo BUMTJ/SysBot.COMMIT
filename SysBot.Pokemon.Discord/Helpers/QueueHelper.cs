@@ -21,7 +21,7 @@ namespace SysBot.Pokemon.Discord
 
             try
             {
-                const string helper = "대기열에 추가했습니다! 거래가 시작되면 여기에 메시지를 보내겠습니다.";
+                const string helper = "통신교환 대기열에 추가했습니다! 거래가 시작되면 여기에 메시지를 보내겠습니다.";
                 IUserMessage test = await trader.SendMessageAsync(helper).ConfigureAwait(false);
 
                 // Try adding
@@ -85,8 +85,8 @@ namespace SysBot.Pokemon.Discord
 
             var pokeName = "";
             if (t == PokeTradeType.Specific && pk.Species != 0)
-                pokeName = $" 받는 포켓몬: {GameInfo.GetStrings(1).Species[pk.Species]}.";
-            msg = $"{user.Mention} - {type} 대기열에 추가되었습니다. {ticketID}. 현재 대기열 위치는: {position.Position}.{pokeName}";
+                pokeName = $" 받으실 포켓몬은 {GameInfo.GetStrings(1).Species[pk.Species]} 입니다.";
+            msg = $"{user.Mention}님!\n**{type} 대기열 등록을 성공하였습니다.**\n\n**통신교환 정보**```\n{pokeName}\n{ticketID} 앞의 대기 인원은 {position.Position}명 입니다.```\n개인 DM을 확인해주세요.";
 
             var botct = Info.Hub.Bots.Count;
             if (position.Position > botct)

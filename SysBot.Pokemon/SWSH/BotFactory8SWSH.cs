@@ -9,7 +9,7 @@ namespace SysBot.Pokemon
         {
             PokeRoutineType.FlexTrade or PokeRoutineType.Idle
                 or PokeRoutineType.SurpriseTrade
-                or PokeRoutineType.LinkTrade
+                or PokeRoutineType.통신교환
                 or PokeRoutineType.Clone
                 or PokeRoutineType.Dump
                 or PokeRoutineType.SeedCheck
@@ -30,7 +30,7 @@ namespace SysBot.Pokemon
         {
             PokeRoutineType.FlexTrade or PokeRoutineType.Idle
                 or PokeRoutineType.SurpriseTrade
-                or PokeRoutineType.LinkTrade
+                or PokeRoutineType.통신교환
                 or PokeRoutineType.Clone
                 or PokeRoutineType.Dump
                 or PokeRoutineType.SeedCheck

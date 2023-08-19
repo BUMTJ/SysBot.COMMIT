@@ -263,7 +263,7 @@ namespace SysBot.Pokemon
                     await Click(A, 0_450, token).ConfigureAwait(false);
 
                 if (--waitPartner <= 0)
-                    return PokeTradeResult.NoTrainerFound;
+                    return PokeTradeResult.트레이너를찾지못함;
             }
             Log("Found a user talking to us!");
 
@@ -277,7 +277,7 @@ namespace SysBot.Pokemon
                 if (!await IsUnionWork(UnionTalkingOffset, token).ConfigureAwait(false))
                     break;
                 if (--waitPartner <= 0)
-                    return PokeTradeResult.TrainerTooSlow;
+                    return PokeTradeResult.트레이너가너무느림;
             }
             Log("Entering the box...");
 
@@ -286,7 +286,7 @@ namespace SysBot.Pokemon
 
             // Can happen if they quit out of talking to us.
             if (!await IsPartnerParamLoaded(token).ConfigureAwait(false))
-                return PokeTradeResult.TrainerTooSlow;
+                return PokeTradeResult.트레이너가너무느림;
 
             var tradePartner = await GetTradePartnerInfo(token).ConfigureAwait(false);
             var trainerNID = GetFakeNID(tradePartner.TrainerName, tradePartner.TrainerID);
@@ -307,7 +307,7 @@ namespace SysBot.Pokemon
                     if (!await EnsureOutsideOfUnionRoom(token).ConfigureAwait(false))
                         return PokeTradeResult.RecoverReturnOverworld;
                 }
-                return PokeTradeResult.SuspiciousActivity;
+                return PokeTradeResult.의심스러운활동;
             }
 
             await Task.Delay(2_000 + Hub.Config.Timings.ExtraTimeOpenBox, token).ConfigureAwait(false);
@@ -330,12 +330,12 @@ namespace SysBot.Pokemon
             // Wait for user input... Needs to be different from the previously offered Pokémon.
             var tradeOffered = await ReadUntilChanged(LinkTradePokemonOffset, lastOffered, 25_000, 1_000, false, true, token).ConfigureAwait(false);
             if (!tradeOffered)
-                return PokeTradeResult.TrainerTooSlow;
+                return PokeTradeResult.트레이너가너무느림;
 
             // If we detected a change, they offered something.
             var offered = await ReadPokemon(LinkTradePokemonOffset, BoxFormatSlotSize, token).ConfigureAwait(false);
             if (offered.Species == 0 || !offered.ChecksumValid)
-                return PokeTradeResult.TrainerTooSlow;
+                return PokeTradeResult.트레이너가너무느림;
             lastOffered = await SwitchConnection.ReadBytesAbsoluteAsync(LinkTradePokemonOffset, 8, token).ConfigureAwait(false);
 
             PokeTradeResult update;
@@ -357,7 +357,7 @@ namespace SysBot.Pokemon
             if (SearchUtil.HashByDetails(received) == SearchUtil.HashByDetails(toSend) && received.Checksum == toSend.Checksum)
             {
                 Log("User did not complete the trade.");
-                return PokeTradeResult.TrainerTooSlow;
+                return PokeTradeResult.트레이너가너무느림;
             }
 
             // As long as we got rid of our inject in b1s1, assume the trade went through.
@@ -420,10 +420,10 @@ namespace SysBot.Pokemon
             for (int i = 0; i < Hub.Config.Trade.MaxTradeConfirmTime; i++)
             {
                 if (await IsUserBeingShifty(detail, token).ConfigureAwait(false))
-                    return PokeTradeResult.SuspiciousActivity;
+                    return PokeTradeResult.의심스러운활동;
                 // We're no longer talking, so they probably quit on us.
                 if (!await IsUnionWork(UnionTalkingOffset, token).ConfigureAwait(false))
-                    return PokeTradeResult.TrainerTooSlow;
+                    return PokeTradeResult.트레이너가너무느림;
                 await Click(A, 1_000, token).ConfigureAwait(false);
 
                 // EC is detectable at the start of the animation.
@@ -436,7 +436,7 @@ namespace SysBot.Pokemon
             }
 
             // If we don't detect a B1S1 change, the trade didn't go through in that time.
-            return PokeTradeResult.TrainerTooSlow;
+            return PokeTradeResult.트레이너가너무느림;
         }
 
         private async Task<bool> EnterUnionRoomWithCode(PokeTradeType tradeType, int tradeCode, CancellationToken token)
@@ -686,7 +686,7 @@ namespace SysBot.Pokemon
 
             Log($"Ended Dump loop after processing {ctr} Pokémon.");
             if (ctr == 0)
-                return PokeTradeResult.TrainerTooSlow;
+                return PokeTradeResult.트레이너가너무느림;
 
             TradeSettings.AddCompletedDumps();
             detail.Notifier.SendNotification(this, detail, $"Dumped {ctr} Pokémon.");
@@ -722,7 +722,7 @@ namespace SysBot.Pokemon
                     var msg = $"Found {partner.TrainerName} has been detected for abusing Ledy trades.";
                     EchoUtil.Echo(msg);
 
-                    return (toSend, PokeTradeResult.SuspiciousActivity);
+                    return (toSend, PokeTradeResult.의심스러운활동);
                 }
 
                 toSend = trade.Receive;
@@ -735,7 +735,7 @@ namespace SysBot.Pokemon
             }
             else if (config.LedyQuitIfNoMatch)
             {
-                return (toSend, PokeTradeResult.TrainerRequestBad);
+                return (toSend, PokeTradeResult.트레이너요청이잘못됨);
             }
 
             for (int i = 0; i < 5; i++)

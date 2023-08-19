@@ -88,14 +88,14 @@ namespace SysBot.Pokemon
 
         public static uint GetTrainerNameOffset(TradeMethod tradeMethod) => tradeMethod switch
         {
-            TradeMethod.LinkTrade => LinkTradePartnerNameOffset,
+            TradeMethod.통신교환 => LinkTradePartnerNameOffset,
             TradeMethod.SurpriseTrade => SurpriseTradePartnerNameOffset,
             _ => throw new ArgumentException("Trainer name offset is not available for this trade method.", nameof(tradeMethod)),
         };
 
         public static uint GetTrainerTIDSIDOffset(TradeMethod tradeMethod) => tradeMethod switch
         {
-            TradeMethod.LinkTrade => LinkTradePartnerTIDSIDOffset,
+            TradeMethod.통신교환 => LinkTradePartnerTIDSIDOffset,
             TradeMethod.SurpriseTrade => SurpriseTradePartnerTIDSIDOffset,
             _ => throw new ArgumentException("Trainer TID/SID offset is not available for this trade method.", nameof(tradeMethod)),
         };

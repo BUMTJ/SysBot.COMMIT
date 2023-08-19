@@ -272,7 +272,7 @@ namespace SysBot.Pokemon
             if (!partnerFound)
             {
                 await ExitTrade(false, token).ConfigureAwait(false);
-                return PokeTradeResult.NoTrainerFound;
+                return PokeTradeResult.트레이너를찾지못함;
             }
 
             Hub.Config.Stream.EndEnterCode(this);
@@ -306,7 +306,7 @@ namespace SysBot.Pokemon
             if (!offering)
             {
                 await ExitTrade(false, token).ConfigureAwait(false);
-                return PokeTradeResult.TrainerTooSlow;
+                return PokeTradeResult.트레이너가너무느림;
             }
 
             Log("Checking offered Pokémon.");
@@ -318,7 +318,7 @@ namespace SysBot.Pokemon
             {
                 Log("Trade ended because trainer offer was rescinded too quickly.");
                 await ExitTrade(false, token).ConfigureAwait(false);
-                return PokeTradeResult.TrainerOfferCanceledQuick;
+                return PokeTradeResult.트레이너제안이취소됨;
             }
 
             PokeTradeResult update;
@@ -334,7 +334,7 @@ namespace SysBot.Pokemon
             var tradeResult = await ConfirmAndStartTrading(poke, token).ConfigureAwait(false);
             if (tradeResult != PokeTradeResult.Success)
             {
-                if (tradeResult == PokeTradeResult.TrainerLeft)
+                if (tradeResult == PokeTradeResult.트레이너가떠남)
                     Log("Trade canceled because trainer left the trade.");
                 await ExitTrade(false, token).ConfigureAwait(false);
                 return tradeResult;
@@ -353,7 +353,7 @@ namespace SysBot.Pokemon
             {
                 Log("User did not complete the trade.");
                 await ExitTrade(false, token).ConfigureAwait(false);
-                return PokeTradeResult.TrainerTooSlow;
+                return PokeTradeResult.트레이너가너무느림;
             }
 
             // As long as we got rid of our inject in b1s1, assume the trade went through.
@@ -398,9 +398,9 @@ namespace SysBot.Pokemon
             for (int i = 0; i < Hub.Config.Trade.MaxTradeConfirmTime; i++)
             {
                 if (await IsOnOverworld(OverworldOffset, token).ConfigureAwait(false))
-                    return PokeTradeResult.TrainerLeft;
+                    return PokeTradeResult.트레이너가떠남;
                 if (await IsUserBeingShifty(detail, token).ConfigureAwait(false))
-                    return PokeTradeResult.SuspiciousActivity;
+                    return PokeTradeResult.의심스러운활동;
                 await Click(A, 1_000, token).ConfigureAwait(false);
 
                 // EC is detectable at the start of the animation.
@@ -412,10 +412,10 @@ namespace SysBot.Pokemon
                 }
             }
             if (await IsOnOverworld(OverworldOffset, token).ConfigureAwait(false))
-                return PokeTradeResult.TrainerLeft;
+                return PokeTradeResult.트레이너가떠남;
 
             // If we don't detect a B1S1 change, the trade didn't go through in that time.
-            return PokeTradeResult.TrainerTooSlow;
+            return PokeTradeResult.트레이너가너무느림;
         }
 
         protected virtual async Task<bool> WaitForTradePartner(CancellationToken token)
@@ -543,7 +543,7 @@ namespace SysBot.Pokemon
 
             Log($"Ended Dump loop after processing {ctr} Pokémon.");
             if (ctr == 0)
-                return PokeTradeResult.TrainerTooSlow;
+                return PokeTradeResult.트레이너가너무느림;
 
             TradeSettings.AddCompletedDumps();
             detail.Notifier.SendNotification(this, detail, $"Dumped {ctr} Pokémon.");
@@ -585,7 +585,7 @@ namespace SysBot.Pokemon
                 poke.SendNotification(this, "This Pokémon is not legal per PKHeX's legality checks. I am forbidden from cloning this. Exiting trade.");
                 poke.SendNotification(this, report);
 
-                return (offered, PokeTradeResult.IllegalTrade);
+                return (offered, PokeTradeResult.불법거래);
             }
 
             var clone = offered.Clone();
@@ -602,7 +602,7 @@ namespace SysBot.Pokemon
                 if (!await CheckCloneChangedOffer(token).ConfigureAwait(false))
                 {
                     Log("Trade partner did not change their Pokémon.");
-                    return (offered, PokeTradeResult.TrainerTooSlow);
+                    return (offered, PokeTradeResult.트레이너가너무느림);
                 }
             }
 
@@ -611,7 +611,7 @@ namespace SysBot.Pokemon
             if (pk2 is null || SearchUtil.HashByDetails(pk2) == SearchUtil.HashByDetails(offered))
             {
                 Log("Trade partner did not change their Pokémon.");
-                return (offered, PokeTradeResult.TrainerTooSlow);
+                return (offered, PokeTradeResult.트레이너가너무느림);
             }
 
             await SetBoxPokemonAbsolute(BoxStartOffset, clone, token, sav).ConfigureAwait(false);
@@ -654,7 +654,7 @@ namespace SysBot.Pokemon
                         msg = $"{AbuseSettings.LedyAbuseEchoMention} {msg}";
                     EchoUtil.Echo(msg);
 
-                    return (toSend, PokeTradeResult.SuspiciousActivity);
+                    return (toSend, PokeTradeResult.의심스러운활동);
                 }
 
                 toSend = trade.Receive;
@@ -665,7 +665,7 @@ namespace SysBot.Pokemon
             }
             else if (config.LedyQuitIfNoMatch)
             {
-                return (toSend, PokeTradeResult.TrainerRequestBad);
+                return (toSend, PokeTradeResult.트레이너요청이잘못됨);
             }
 
             return (toSend, PokeTradeResult.Success);
