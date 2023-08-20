@@ -62,9 +62,9 @@ namespace SysBot.Pokemon.Discord
             var userID = user.Id;
             var name = user.Username;
 
-            var trainer = new PokeTradeTrainerInfo(trainerName, userID);
-            var notifier = new DiscordTradeNotifier<T>(pk, trainer, code, user);
-            var detail = new PokeTradeDetail<T>(pk, trainer, notifier, t, code, sig == RequestSignificance.Favored);
+            var trainerInfo = new PokeTradeTrainerInfo(trainerName, userID); // 이름 변경: trainer -> trainerInfo
+            var notifier = new DiscordTradeNotifier<T>(pk, trainerInfo, code, user); // 변경: trainer -> trainerInfo
+            var detail = new PokeTradeDetail<T>(pk, trainerInfo, notifier, t, code, sig == RequestSignificance.Favored); // 변경: trainer -> trainerInfo
             var trade = new TradeEntry<T>(detail, userID, type, name);
             var embedBuilder = new EmbedBuilder();
 
@@ -72,15 +72,13 @@ namespace SysBot.Pokemon.Discord
             var Info = hub.Queues.Info;
             var added = Info.AddToTradeQueue(trade, userID, sig == RequestSignificance.Owner);
 
-            
-
             if (added == QueueResultAdd.AlreadyInQueue)
             {
                 embedBuilder
-                .WithTitle("Sorry, you are already in the queue.");
+                    .WithTitle("Sorry, you are already in the queue.");
 
                 embed = embedBuilder.Build();
-                
+
                 return false;
             }
                 
@@ -115,7 +113,8 @@ namespace SysBot.Pokemon.Discord
             return true;
         }
 
-         private static async Task HandleDiscordExceptionAsync(SocketCommandContext context, SocketUser trader, HttpException ex)
+
+        private static async Task HandleDiscordExceptionAsync(SocketCommandContext context, SocketUser trader, HttpException ex)
         {
             string message = string.Empty;
             switch (ex.DiscordCode)
