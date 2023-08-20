@@ -83,18 +83,28 @@ namespace SysBot.Pokemon.Discord
             if (TradeStartModule<T>.IsStartChannel(context.Channel.Id))
                 ticketID = $", unique ID: {detail.ID}";
 
-            var pokeName = "";
-            if (t == PokeTradeType.Specific && pk.Species != 0)
-                pokeName = $" 받으실 포켓몬은 {GameInfo.GetStrings(1).Species[pk.Species]} 입니다.";
-            msg = $"{user.Mention}님!\n**통신교환 대기열 등록을 성공하였습니다.**\n\n**통신교환 정보**```\n{pokeName}\n{ticketID} 앞의 대기 인원은 {position.Position}명 입니다.```\n개인 DM을 확인해주세요.";
+           var pokeName = "";
+if (t == PokeTradeType.Specific && pk.Species != 0)
+{
+    var speciesName = GameInfo.GetStrings(1).Species[pk.Species];
+    pokeName = $"받으실 포켓몬은 {speciesName} 입니다.";
+}
 
-            var botct = Info.Hub.Bots.Count;
-            if (position.Position > botct)
-            {
-                var eta = Info.Hub.Config.Queues.EstimateDelay(position.Position, botct);
-                msg += $" Estimated: {eta:F1} minutes.";
-            }
-            return true;
+var embed = new EmbedBuilder();
+embed.Title = $"{user.Username}님! 통신교환 대기열 등록을 성공하였습니다.";
+embed.Description = $"**통신교환 정보**\n{pokeName}\n{ticketID} 현재 대기열 위치는 {position.Position} 입니다.";
+embed.Color = Color.Green;
+
+var botct = Info.Hub.Bots.Count;
+if (position.Position > botct)
+{
+    var eta = Info.Hub.Config.Queues.EstimateDelay(position.Position, botct);
+    embed.Description += $" 예상 대기 시간은 {eta:F1}분 입니다.";
+}
+
+msg = embed.Build().ToString();
+
+return true;
         }
 
         private static async Task HandleDiscordExceptionAsync(SocketCommandContext context, SocketUser trader, HttpException ex)
