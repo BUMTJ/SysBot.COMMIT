@@ -21,7 +21,7 @@ namespace SysBot.Pokemon.Discord
 
             try
             {
-                const string helper = "통신교환 대기열에 추가했습니다! 거래가 시작되면 여기에 메시지를 보내겠습니다.";
+                const string helper = "대기열에 추가했습니다! 거래가 시작되면 여기에 메시지를 보내겠습니다.";
                 IUserMessage test = await trader.SendMessageAsync(helper).ConfigureAwait(false);
 
                 // Try adding
@@ -56,7 +56,7 @@ namespace SysBot.Pokemon.Discord
             await AddToQueueAsync(context, code, trainer, sig, trade, routine, type, context.User).ConfigureAwait(false);
         }
 
-        private static bool AddToTradeQueue(SocketCommandContext context, T pk, int code, string trainerName, RequestSignificance sig, PokeRoutineType type, PokeTradeType t, SocketUser trader, out string msg)
+        private static bool AddToTradeQueue(SocketCommandContext context, T pk, int code, string trainerName, RequestSignificance sig, PokeRoutineType type, PokeTradeType t, SocketUser trader, out Embed embed)
         {
             var user = trader;
             var userID = user.Id;
@@ -66,48 +66,56 @@ namespace SysBot.Pokemon.Discord
             var notifier = new DiscordTradeNotifier<T>(pk, trainer, code, user);
             var detail = new PokeTradeDetail<T>(pk, trainer, notifier, t, code, sig == RequestSignificance.Favored);
             var trade = new TradeEntry<T>(detail, userID, type, name);
+            var embedBuilder = new EmbedBuilder();
 
             var hub = SysCord<T>.Runner.Hub;
             var Info = hub.Queues.Info;
             var added = Info.AddToTradeQueue(trade, userID, sig == RequestSignificance.Owner);
 
+            
+
             if (added == QueueResultAdd.AlreadyInQueue)
             {
-                msg = "Sorry, you are already in the queue.";
+                embedBuilder
+                .WithTitle("Sorry, you are already in the queue.");
+
+                embed = embedBuilder.Build();
+                
                 return false;
             }
-
+                
+                
             var position = Info.CheckPosition(userID, type);
 
             var ticketID = "";
             if (TradeStartModule<T>.IsStartChannel(context.Channel.Id))
                 ticketID = $", unique ID: {detail.ID}";
+            
+            var pokeName = "";
+            if (t == PokeTradeType.Specific && pk.Species != 0)
+                pokeName = $" 받으실 포켓몬은 **{GameInfo.GetStrings(1).Species[pk.Species]}** 입니다.";
+    
+            embedBuilder
+                .WithTitle($"{user.Username}님! 통신교환 대기열 등록을 성공하였습니다.")
+                .WithDescription("상세 정보")
+                .AddField(pokeName)
+                .AddField("현재 대기열 순서는", position.Position.ToString()"입니다.")
+                .AddField("개인 DM을 확인하시길 바랍니다.")
+                .WithColor(Color.Green);
 
-           var pokeName = "";
-if (t == PokeTradeType.Specific && pk.Species != 0)
-{
-    var speciesName = GameInfo.GetStrings(1).Species[pk.Species];
-    pokeName = $"받으실 포켓몬은 {speciesName} 입니다.";
-}
+            var botct = Info.Hub.Bots.Count;
+            if (position.Position > botct)
+            {
+                var eta = Info.Hub.Config.Queues.EstimateDelay(position.Position, botct);
+                embedBuilder.AddField("예상 대기 시간은" $"{eta:F1}분 입니다");
+            }
 
-var embed = new EmbedBuilder();
-embed.Title = $"{user.Username}님! 통신교환 대기열 등록을 성공하였습니다.";
-embed.Description = $"**통신교환 정보**\n{pokeName}\n{ticketID} 현재 대기열 위치는 {position.Position} 입니다.";
-embed.Color = Color.Green;
+            embed = embedBuilder.Build();
 
-var botct = Info.Hub.Bots.Count;
-if (position.Position > botct)
-{
-    var eta = Info.Hub.Config.Queues.EstimateDelay(position.Position, botct);
-    embed.Description += $" 예상 대기 시간은 {eta:F1}분 입니다.";
-}
-
-msg = embed.Build().ToString();
-
-return true;
+            return true;
         }
 
-        private static async Task HandleDiscordExceptionAsync(SocketCommandContext context, SocketUser trader, HttpException ex)
+         private static async Task HandleDiscordExceptionAsync(SocketCommandContext context, SocketUser trader, HttpException ex)
         {
             string message = string.Empty;
             switch (ex.DiscordCode)
