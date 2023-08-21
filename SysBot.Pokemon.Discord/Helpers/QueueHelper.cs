@@ -1,4 +1,4 @@
-﻿using Discord;
+using Discord;
 using Discord.Commands;
 using Discord.Net;
 using Discord.WebSocket;
@@ -173,15 +173,15 @@ namespace SysBot.Pokemon.Discord
 
                     embedTitle += $" {(Species)trade.Species} ";
                     if (trade.Gender == 0)
-                        embedTitle += "(M)";
+                        embedTitle += "(남)";
                     else if (trade.Gender == 1)
-                        embedTitle += "(F)";
+                        embedTitle += "(여)";
                     if (trade.HeldItem > 0)
-                        embedTitle += $" ➜ {HeldItem}";
+                        embedTitle += $",지닌물건:{HeldItem}";
 
-                    embedAuthor = $"{UNick}님의 ";
-                    embedAuthor += trade.IsShiny ? "**이로치** " : "";
-                    embedAuthor += "포켓몬:";
+                    embedAuthor = $"{UNick}님이 받으실";
+                    embedAuthor += trade.IsShiny ? " 이로치 " : "";
+                    embedAuthor += "포켓몬은 다음과 같습니다.";
 
                     embedMsg = $"**특성:** {(Ability)trade.Ability}";
                     embedMsg += $"\n**레벨:** {trade.CurrentLevel}";
