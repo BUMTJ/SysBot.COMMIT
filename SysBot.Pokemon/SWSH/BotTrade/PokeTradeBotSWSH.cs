@@ -308,7 +308,11 @@ namespace SysBot.Pokemon
             if (!partnerFound)
             {
                 await ResetTradePosition(token).ConfigureAwait(false);
+<<<<<<< HEAD
                 return PokeTradeResult.트레이너를찾지못했습니다;
+=======
+                return PokeTradeResult.트레이너를찾지못함;
+>>>>>>> cb5d35362ce394505b43c5ae36835a46d034f2ad
             }
 
             // Select Pokemon
@@ -353,7 +357,11 @@ namespace SysBot.Pokemon
             if (offered is null)
             {
                 await ExitSeedCheckTrade(token).ConfigureAwait(false);
+<<<<<<< HEAD
                 return PokeTradeResult.트레이너가느립니다;
+=======
+                return PokeTradeResult.트레이너가너무느림;
+>>>>>>> cb5d35362ce394505b43c5ae36835a46d034f2ad
             }
 
             if (poke.Type == PokeTradeType.Seed)
@@ -392,7 +400,11 @@ namespace SysBot.Pokemon
                 Log("User did not complete the trade.");
                 RecordUtil<PokeTradeBotSWSH>.Record($"Cancelled\t{trainerNID:X16}\t{trainerName}\t{poke.Trainer.TrainerName}\\t{poke.ID}\t{toSend.EncryptionConstant:X8}\t{offered.EncryptionConstant:X8}");
                 await ExitTrade(false, token).ConfigureAwait(false);
+<<<<<<< HEAD
                 return PokeTradeResult.트레이너가느립니다;
+=======
+                return PokeTradeResult.트레이너가너무느림;
+>>>>>>> cb5d35362ce394505b43c5ae36835a46d034f2ad
             }
 
             // As long as we got rid of our inject in b1s1, assume the trade went through.
@@ -524,7 +536,11 @@ namespace SysBot.Pokemon
             if (!partnerFound || pk2 == null || SearchUtil.HashByDetails(pk2) == SearchUtil.HashByDetails(offered))
             {
                 Log("Trade partner did not change their Pokémon.");
+<<<<<<< HEAD
                 return (offered, PokeTradeResult.트레이너가느립니다);
+=======
+                return (offered, PokeTradeResult.트레이너가너무느림);
+>>>>>>> cb5d35362ce394505b43c5ae36835a46d034f2ad
             }
 
             await Click(A, 0_800, token).ConfigureAwait(false);
@@ -660,6 +676,7 @@ namespace SysBot.Pokemon
             }
             else if (config.LedyQuitIfNoMatch)
             {
+<<<<<<< HEAD
                 Fraudiouscl fraudious = new();
 
                 var msg = $"Pokémon: {(Species)offered.Species}";
@@ -668,6 +685,8 @@ namespace SysBot.Pokemon
 
                 await fraudious.EmbedAlertMessage(offered, offered.CanGigantamax, offered.FormArgument, msg, "Bad Request Attempted:").ConfigureAwait(false);
 
+=======
+>>>>>>> cb5d35362ce394505b43c5ae36835a46d034f2ad
                 return (toSend, PokeTradeResult.트레이너요청이잘못됨);
             }
 
@@ -751,7 +770,11 @@ namespace SysBot.Pokemon
             Log($"Ended Dump loop after processing {ctr} Pokémon.");
             await ExitSeedCheckTrade(token).ConfigureAwait(false);
             if (ctr == 0)
+<<<<<<< HEAD
                 return PokeTradeResult.트레이너가느립니다;
+=======
+                return PokeTradeResult.트레이너가너무느림;
+>>>>>>> cb5d35362ce394505b43c5ae36835a46d034f2ad
 
             TradeSettings.AddCompletedDumps();
             detail.Notifier.SendNotification(this, detail, $"Dumped {ctr} Pokémon.");
@@ -843,7 +866,11 @@ namespace SysBot.Pokemon
             if (!partnerFound)
             {
                 await ResetTradePosition(token).ConfigureAwait(false);
+<<<<<<< HEAD
                 return PokeTradeResult.트레이너를찾지못했습니다;
+=======
+                return PokeTradeResult.트레이너를찾지못함;
+>>>>>>> cb5d35362ce394505b43c5ae36835a46d034f2ad
             }
 
             // Let the game flush the results and de-register from the online surprise trade queue.

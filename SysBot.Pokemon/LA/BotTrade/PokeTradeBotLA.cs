@@ -272,7 +272,11 @@ namespace SysBot.Pokemon
             if (!partnerFound)
             {
                 await ExitTrade(false, token).ConfigureAwait(false);
+<<<<<<< HEAD
                 return PokeTradeResult.트레이너를찾지못했습니다;
+=======
+                return PokeTradeResult.트레이너를찾지못함;
+>>>>>>> cb5d35362ce394505b43c5ae36835a46d034f2ad
             }
 
             Hub.Config.Stream.EndEnterCode(this);
@@ -306,7 +310,11 @@ namespace SysBot.Pokemon
             if (!offering)
             {
                 await ExitTrade(false, token).ConfigureAwait(false);
+<<<<<<< HEAD
                 return PokeTradeResult.트레이너가느립니다;
+=======
+                return PokeTradeResult.트레이너가너무느림;
+>>>>>>> cb5d35362ce394505b43c5ae36835a46d034f2ad
             }
 
             Log("Checking offered Pokémon.");
@@ -318,7 +326,11 @@ namespace SysBot.Pokemon
             {
                 Log("Trade ended because trainer offer was rescinded too quickly.");
                 await ExitTrade(false, token).ConfigureAwait(false);
+<<<<<<< HEAD
                 return PokeTradeResult.트레이너가빠르게취소함;
+=======
+                return PokeTradeResult.트레이너제안이취소됨;
+>>>>>>> cb5d35362ce394505b43c5ae36835a46d034f2ad
             }
 
             PokeTradeResult update;
@@ -353,7 +365,11 @@ namespace SysBot.Pokemon
             {
                 Log("User did not complete the trade.");
                 await ExitTrade(false, token).ConfigureAwait(false);
+<<<<<<< HEAD
                 return PokeTradeResult.트레이너가느립니다;
+=======
+                return PokeTradeResult.트레이너가너무느림;
+>>>>>>> cb5d35362ce394505b43c5ae36835a46d034f2ad
             }
 
             // As long as we got rid of our inject in b1s1, assume the trade went through.
@@ -415,7 +431,11 @@ namespace SysBot.Pokemon
                 return PokeTradeResult.트레이너가떠남;
 
             // If we don't detect a B1S1 change, the trade didn't go through in that time.
+<<<<<<< HEAD
             return PokeTradeResult.트레이너가느립니다;
+=======
+            return PokeTradeResult.트레이너가너무느림;
+>>>>>>> cb5d35362ce394505b43c5ae36835a46d034f2ad
         }
 
         protected virtual async Task<bool> WaitForTradePartner(CancellationToken token)
@@ -543,7 +563,11 @@ namespace SysBot.Pokemon
 
             Log($"Ended Dump loop after processing {ctr} Pokémon.");
             if (ctr == 0)
+<<<<<<< HEAD
                 return PokeTradeResult.트레이너가느립니다;
+=======
+                return PokeTradeResult.트레이너가너무느림;
+>>>>>>> cb5d35362ce394505b43c5ae36835a46d034f2ad
 
             TradeSettings.AddCompletedDumps();
             detail.Notifier.SendNotification(this, detail, $"Dumped {ctr} Pokémon.");
@@ -604,7 +628,11 @@ namespace SysBot.Pokemon
                 if (!await CheckCloneChangedOffer(token).ConfigureAwait(false))
                 {
                     Log("Trade partner did not change their Pokémon.");
+<<<<<<< HEAD
                     return (offered, PokeTradeResult.트레이너가느립니다);
+=======
+                    return (offered, PokeTradeResult.트레이너가너무느림);
+>>>>>>> cb5d35362ce394505b43c5ae36835a46d034f2ad
                 }
             }
 
@@ -613,7 +641,11 @@ namespace SysBot.Pokemon
             if (pk2 is null || SearchUtil.HashByDetails(pk2) == SearchUtil.HashByDetails(offered))
             {
                 Log("Trade partner did not change their Pokémon.");
+<<<<<<< HEAD
                 return (offered, PokeTradeResult.트레이너가느립니다);
+=======
+                return (offered, PokeTradeResult.트레이너가너무느림);
+>>>>>>> cb5d35362ce394505b43c5ae36835a46d034f2ad
             }
 
             await SetBoxPokemonAbsolute(BoxStartOffset, clone, token, sav).ConfigureAwait(false);

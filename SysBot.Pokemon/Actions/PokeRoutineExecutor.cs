@@ -161,6 +161,7 @@ namespace SysBot.Pokemon
                     msg = $"{AbuseSettings.BannedIDMatchEchoMention} {msg}";
                 EchoUtil.Echo(msg);
                 return PokeTradeResult.의심스러운활동;
+<<<<<<< HEAD
             }
 
             if (wlIndex > -1)
@@ -176,6 +177,8 @@ namespace SysBot.Pokemon
                 }
                 else if (wlID != 0)
                     wlAllow = true;
+=======
+>>>>>>> cb5d35362ce394505b43c5ae36835a46d034f2ad
             }
 
             // Check within the trade type (distribution or non-Distribution).
@@ -197,7 +200,11 @@ namespace SysBot.Pokemon
                         msg += $"\nID: {TrainerNID}";
                     if (!string.IsNullOrWhiteSpace(AbuseSettings.CooldownAbuseEchoMention))
                         msg = $"{AbuseSettings.CooldownAbuseEchoMention} {msg}";
+<<<<<<< HEAD
                     EchoUtil.EchoEmbed("<a:SidSalute:1090091589013082154>", Fraudiouscl.EmbedCDMessage(delta, cd, msg, "Cooldown Being Ignored!!!"));
+=======
+                    EchoUtil.Echo(msg);
+>>>>>>> cb5d35362ce394505b43c5ae36835a46d034f2ad
                     return PokeTradeResult.의심스러운활동;
                 }
 

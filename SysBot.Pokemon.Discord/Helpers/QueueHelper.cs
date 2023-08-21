@@ -28,7 +28,11 @@ namespace SysBot.Pokemon.Discord
 
             try
             {
+<<<<<<< HEAD
                 const string helper = "교환 대기열 추가에 성공했습니당! 거래가 시작되면 여기에 메시지를 보내겠습니다잉!";
+=======
+                const string helper = "통신교환 대기열에 추가했습니다! 거래가 시작되면 여기에 메시지를 보내겠습니다.";
+>>>>>>> cb5d35362ce394505b43c5ae36835a46d034f2ad
                 IUserMessage test = await trader.SendMessageAsync(helper).ConfigureAwait(false);
 
                 // Try adding
@@ -271,7 +275,11 @@ namespace SysBot.Pokemon.Discord
                 await context.Channel.SendMessageAsync("", false, builder.Build()).ConfigureAwait(false);
 
                 // Notify in PM to mirror what is said in the channel.
+<<<<<<< HEAD
                 await trader.SendMessageAsync($"{msg}\n통신 교환 코드는 **{code:0000 0000}** 입니다.").ConfigureAwait(false);
+=======
+                await trader.SendMessageAsync($"{msg}\n통신교환 코드는 **{code:0000 0000}**입니다.").ConfigureAwait(false);
+>>>>>>> cb5d35362ce394505b43c5ae36835a46d034f2ad
 
                 // Clean Up
                 if (result)
@@ -326,18 +334,26 @@ namespace SysBot.Pokemon.Discord
 
             var pokeName = "";
             if (t == PokeTradeType.Specific && pk.Species != 0)
+<<<<<<< HEAD
                 pokeName = $" 받으실 포켓몬은: {GameInfo.GetStrings(1).Species[pk.Species]}입니다.";
             msg = $"{user.Mention} - Added to the {type} queue{ticketID}. 현재 대기열 순번은: {position.Position}입니다.{pokeName}";
 
+=======
+                pokeName = $" 받으실 포켓몬은 **{GameInfo.GetStrings(1).Species[pk.Species]}** 입니다.\n해당 통신교환의 현재 대기열 순서는 {position.Position}번 입니다.";
+            msg =  $"{user.Username}님! **통신교환 대기열 등록을 성공하였습니다.**\n\n **상세 정보** \n```{pokeName}```\n개인 DM을 확인하시길 바랍니다.";
+>>>>>>> cb5d35362ce394505b43c5ae36835a46d034f2ad
             var botct = Info.Hub.Bots.Count;
             if (position.Position > botct)
             {
                 var eta = Info.Hub.Config.Queues.EstimateDelay(position.Position, botct);
+<<<<<<< HEAD
                 msg += $" 예상 대기 시간은 {eta:F1} 분 입니다.";
+=======
+                msg += $" 예상 대기 시간은 {eta:F1}분 입니다.";
+>>>>>>> cb5d35362ce394505b43c5ae36835a46d034f2ad
             }
             return true;
         }
-
         private static async Task HandleDiscordExceptionAsync(SocketCommandContext context, SocketUser trader, HttpException ex)
         {
             string message = string.Empty;
@@ -365,13 +381,21 @@ namespace SysBot.Pokemon.Discord
                 case DiscordErrorCode.CannotSendMessageToUser:
                     {
                         // The user either has DMs turned off, or Discord thinks they do.
+<<<<<<< HEAD
                         message = context.User == trader ? "포켓몬 교환을 이용하시려면 개인 메시지를 활성화 해야합니다!" : "해당 사용자가 개인 메시지를 활성화해야 대기열에 추가할 수 있습니다.";
+=======
+                        message = context.User == trader ? "대기열에 들어가려면 개인 DM을 사용 가능으로 설정해야 합니다!" : "언급된 사용자가 개인 메시지를 대기열에 넣으려면 개인 메시지를 활성화해야 합니다!";
+>>>>>>> cb5d35362ce394505b43c5ae36835a46d034f2ad
                     }
                     break;
                 default:
                     {
                         // Send a generic error message.
+<<<<<<< HEAD
                         message = ex.DiscordCode != null ? $"디스코드 오류 {(int)ex.DiscordCode}: {ex.Reason}" : $"HTTP 오류 {(int)ex.HttpCode}: {ex.Message}";
+=======
+                        message = ex.DiscordCode != null ? $"디스코드 오류 {(int)ex.DiscordCode}: {ex.Reason}" : $"Http 오류 {(int)ex.HttpCode}: {ex.Message}";
+>>>>>>> cb5d35362ce394505b43c5ae36835a46d034f2ad
                     }
                     break;
             }

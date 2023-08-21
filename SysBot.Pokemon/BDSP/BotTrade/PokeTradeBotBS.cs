@@ -263,7 +263,11 @@ namespace SysBot.Pokemon
                     await Click(A, 0_450, token).ConfigureAwait(false);
 
                 if (--waitPartner <= 0)
+<<<<<<< HEAD
                     return PokeTradeResult.트레이너를찾지못했습니다;
+=======
+                    return PokeTradeResult.트레이너를찾지못함;
+>>>>>>> cb5d35362ce394505b43c5ae36835a46d034f2ad
             }
             Log("Found a user talking to us!");
 
@@ -277,7 +281,11 @@ namespace SysBot.Pokemon
                 if (!await IsUnionWork(UnionTalkingOffset, token).ConfigureAwait(false))
                     break;
                 if (--waitPartner <= 0)
+<<<<<<< HEAD
                     return PokeTradeResult.트레이너가느립니다;
+=======
+                    return PokeTradeResult.트레이너가너무느림;
+>>>>>>> cb5d35362ce394505b43c5ae36835a46d034f2ad
             }
             Log("Entering the box...");
 
@@ -286,7 +294,11 @@ namespace SysBot.Pokemon
 
             // Can happen if they quit out of talking to us.
             if (!await IsPartnerParamLoaded(token).ConfigureAwait(false))
+<<<<<<< HEAD
                 return PokeTradeResult.트레이너가느립니다;
+=======
+                return PokeTradeResult.트레이너가너무느림;
+>>>>>>> cb5d35362ce394505b43c5ae36835a46d034f2ad
 
             var tradePartner = await GetTradePartnerInfo(token).ConfigureAwait(false);
             var trainerNID = GetFakeNID(tradePartner.TrainerName, tradePartner.TrainerID);
@@ -330,12 +342,20 @@ namespace SysBot.Pokemon
             // Wait for user input... Needs to be different from the previously offered Pokémon.
             var tradeOffered = await ReadUntilChanged(LinkTradePokemonOffset, lastOffered, 25_000, 1_000, false, true, token).ConfigureAwait(false);
             if (!tradeOffered)
+<<<<<<< HEAD
                 return PokeTradeResult.트레이너가느립니다;
+=======
+                return PokeTradeResult.트레이너가너무느림;
+>>>>>>> cb5d35362ce394505b43c5ae36835a46d034f2ad
 
             // If we detected a change, they offered something.
             var offered = await ReadPokemon(LinkTradePokemonOffset, BoxFormatSlotSize, token).ConfigureAwait(false);
             if (offered.Species == 0 || !offered.ChecksumValid)
+<<<<<<< HEAD
                 return PokeTradeResult.트레이너가느립니다;
+=======
+                return PokeTradeResult.트레이너가너무느림;
+>>>>>>> cb5d35362ce394505b43c5ae36835a46d034f2ad
             lastOffered = await SwitchConnection.ReadBytesAbsoluteAsync(LinkTradePokemonOffset, 8, token).ConfigureAwait(false);
 
             PokeTradeResult update;
@@ -357,7 +377,11 @@ namespace SysBot.Pokemon
             if (SearchUtil.HashByDetails(received) == SearchUtil.HashByDetails(toSend) && received.Checksum == toSend.Checksum)
             {
                 Log("User did not complete the trade.");
+<<<<<<< HEAD
                 return PokeTradeResult.트레이너가느립니다;
+=======
+                return PokeTradeResult.트레이너가너무느림;
+>>>>>>> cb5d35362ce394505b43c5ae36835a46d034f2ad
             }
 
             // As long as we got rid of our inject in b1s1, assume the trade went through.
@@ -423,7 +447,11 @@ namespace SysBot.Pokemon
                     return PokeTradeResult.의심스러운활동;
                 // We're no longer talking, so they probably quit on us.
                 if (!await IsUnionWork(UnionTalkingOffset, token).ConfigureAwait(false))
+<<<<<<< HEAD
                     return PokeTradeResult.트레이너가느립니다;
+=======
+                    return PokeTradeResult.트레이너가너무느림;
+>>>>>>> cb5d35362ce394505b43c5ae36835a46d034f2ad
                 await Click(A, 1_000, token).ConfigureAwait(false);
 
                 // EC is detectable at the start of the animation.
@@ -436,7 +464,11 @@ namespace SysBot.Pokemon
             }
 
             // If we don't detect a B1S1 change, the trade didn't go through in that time.
+<<<<<<< HEAD
             return PokeTradeResult.트레이너가느립니다;
+=======
+            return PokeTradeResult.트레이너가너무느림;
+>>>>>>> cb5d35362ce394505b43c5ae36835a46d034f2ad
         }
 
         private async Task<bool> EnterUnionRoomWithCode(PokeTradeType tradeType, int tradeCode, CancellationToken token)
@@ -686,7 +718,11 @@ namespace SysBot.Pokemon
 
             Log($"Ended Dump loop after processing {ctr} Pokémon.");
             if (ctr == 0)
+<<<<<<< HEAD
                 return PokeTradeResult.트레이너가느립니다;
+=======
+                return PokeTradeResult.트레이너가너무느림;
+>>>>>>> cb5d35362ce394505b43c5ae36835a46d034f2ad
 
             TradeSettings.AddCompletedDumps();
             detail.Notifier.SendNotification(this, detail, $"Dumped {ctr} Pokémon.");

@@ -66,9 +66,15 @@ namespace SysBot.Pokemon.Discord
                 pkm = EntityConverter.ConvertToType(pkm, typeof(T), out _) ?? pkm;
                 if (pkm is not T pk || !la.Valid)
                 {
+<<<<<<< HEAD
                     var reason = result == "시간초과" ? $"해당 {spec} 세트를 생성하는데 너무 오래 걸렸습니다." : result == "버전 불일치" ? "요청 거부: 자동 합법성 모드 버전이 일치하지 않습니다." : $"해당{spec} 세트를 생성할 수 없습니다.";
                     var imsg = $"이런! {reason}";
                     if (result == "실패")
+=======
+                    var reason = result == "Timeout" ? $"해당 {spec} 세트를 작성하는데 너무 오래 걸렸습니다." : result == "버전 불일치" ? "요청이 거부되었습니다.: 자동 합법성 모드에 부적합합니다" : $"저는 당신이 쇼다운 텍스트로 작성한 {spec} 스펙을 만들 수 없습니다.";
+                    var imsg = $"이런! {reason}";
+                    if (result == "Failed")
+>>>>>>> cb5d35362ce394505b43c5ae36835a46d034f2ad
                         imsg += $"\n{AutoLegalityWrapper.GetLegalizationHint(template, sav, pkm)}";
                     await ReplyAsync(imsg).ConfigureAwait(false);
                     return;
@@ -81,7 +87,11 @@ namespace SysBot.Pokemon.Discord
             catch (Exception ex)
             {
                 LogUtil.LogSafe(ex, nameof(TradeModule<T>));
+<<<<<<< HEAD
                 var msg = $"이런! 해당 쇼다운 세트에서 예기치 않은 문제가 발생했습니다:\n```{string.Join("\n", set.GetSetLines())}```";
+=======
+                var msg = $"이런! 이 쇼다운 세트에서 예기치 않은 문제가 발생했습니다.:\n```{string.Join("\n", set.GetSetLines())}```";
+>>>>>>> cb5d35362ce394505b43c5ae36835a46d034f2ad
                 await ReplyAsync(msg).ConfigureAwait(false);
             }
         }
