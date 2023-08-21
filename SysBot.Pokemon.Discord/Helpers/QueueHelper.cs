@@ -28,7 +28,7 @@ namespace SysBot.Pokemon.Discord
 
             try
             {
-                const string helper = "I've added you to the queue! I'll message you here when your trade is starting.";
+                const string helper = "교환 대기열 추가에 성공했습니당! 거래가 시작되면 여기에 메시지를 보내겠습니다잉!";
                 IUserMessage test = await trader.SendMessageAsync(helper).ConfigureAwait(false);
 
                 // Try adding
@@ -107,58 +107,54 @@ namespace SysBot.Pokemon.Discord
                         _ => "LGPE",
                     };
 
-                    embedTitle = $"__Search once bot DMs you Initializing trade__\n";
-                    embedAuthor = $"{UNick}'s ";
+                    embedTitle = $"__한번 채팅을 보내면 거래를 초기화 할 수 있습니다.__\n";
+                    embedAuthor = $"{UNick}'님 ";
                     embedMsg = $"";
 
                     if (routine == PokeRoutineType.Clone)
                     {
                         embedMsgColor = 0xF9F815;
-                        embedAuthor += "Clone Request";
+                        embedAuthor += "포켓몬 복제 요청";
                         embedMsg += $"**STEPS:**\n";
-                        embedMsg += $"**1.** Show a Pokémon to be cloned\n";
-                        embedMsg += $"**2.** Hit B once to back out of your offer\n";
-                        embedMsg += $"**3.** Offer a trash Pokémon to receive your clone\n";
-                        embedMsg += $"**4.** Remember to proceed past the warning message\n\n";
-                        embedMsg += $"Your cooldown of **{SysCordSettings.HubConfig.TradeAbuse.TradeCooldown}** mins will start once the trade completes\n\n";
-                        embedMsg += $"Thank you come again!";
+                        embedMsg += $"**1.** 통신교환 창에서 복제할 포켓몬을 보여주세요\n";
+                        embedMsg += $"**2.** 교환 직전, 통신 교환을 나가주세요\n";
+                        embedMsg += $"**3.** 포켓몬을 복제하고 파일을 보내겠습니다.\n";
+                        embedMsg += $"**4.** 해당 메시지를 기억하시길 바랍니다..\n\n";
+                        embedMsg += $"당신은 **{SysCordSettings.HubConfig.TradeAbuse.TradeCooldown}** 분의 쿨다운이 지나면 교환을 다시 시작할 수 있습니다.\n\n";
+                        embedMsg += $"감사합니다.";
                     }
                     else if (routine == PokeRoutineType.Dump)
                     {
                         embedMsgColor = 0x6015F9;
-                        embedAuthor += "Dump Request";
-                        embedMsg += $"Show your Pokémon to be dumped\n";
-                        embedMsg += $"You have **{SysCordSettings.HubConfig.Trade.MaxDumpTradeTime}** seconds to show your Pokémon\n";
-                        embedMsg += $"You can show up to **{SysCordSettings.HubConfig.Trade.MaxDumpsPerTrade}** Pokémon\n\n";
-                        embedMsg += $"Your cooldown of **{SysCordSettings.HubConfig.TradeAbuse.TradeCooldown}** mins will start once the trade completes\n\n";
-                        embedMsg += $"Thank you come again!";
+                        embedAuthor += "PK9 덤프 요청";
+                        embedMsg += $"포켓몬 파일을 통해 교환합니다.\n";
+                        embedMsg += $"당신의 포켓몬을 보여줄 수 있는 시간은 **{SysCordSettings.HubConfig.Trade.MaxDumpTradeTime}** 입니다.\n";
+                        embedMsg += $"포켓몬은 **{SysCordSettings.HubConfig.Trade.MaxDumpsPerTrade}** 여기 있습니다.\n\n";
+                        embedMsg += $"당신은 **{SysCordSettings.HubConfig.TradeAbuse.TradeCooldown}** 분의 쿨다운이 지나면 교환을 다시 시작할 수 있습니다.\n\n";
+                        embedMsg += $"감사합니다, 다시 이용해 주세요!";
                     }
                     else if (routine == PokeRoutineType.DirectTrade)
                     {
                         embedMsgColor = 0x6FFEEC;
-                        embedAuthor += "Direct Trade Request";
-                        embedMsg += $"Trade using the nicknames on sheet or use **Special Features**\n";
-                        embedMsg += $"The Current Game running is **{gamever}**\n\n";
-                        embedMsg += $"Commands:\n**!help**, **!rsv**, **!t**, **!dump**, **!clone**, **!checkcd**\n";
-                        embedMsg += $"Your cooldown of **{cd}** mins will start once the trade completes\n";
-                        embedMsg += $"Enjoy & Please come again !";
+                        embedAuthor += "통신 교환 요청";
+                        embedMsg += $"시트의 별명을 사용하여 거래하거나 **특수 기능**을 사용합니다\n";
+                        embedMsg += $"현재 진행 중인 게임은 **{gamever}** 입니다.\n\n";
+                        embedMsg += $"명령어:\n**$help**, **$rsv**, **$t**, **$dump**, **$clone**, **$checkcd**\n";
+                        embedMsg += $"당신은 **{cd}** 분의 쿨다운이 지나면 교환을 다시 시작할 수 있습니다.\n";
+                        embedMsg += $"즐거운 시간 되시고 다시 와주세요!";
                     }
 
                     embedAuthorBuild.IconUrl = "https://archives.bulbagarden.net/media/upload/e/e1/PCP363.png";
                     embedAuthorBuild.Name = embedAuthor;
 
-                    embedFtr.Text = $"Current Position: " + SysCord<T>.Runner.Hub.Queues.Info.Count.ToString();
+                    embedFtr.Text = $"현재 대기열 순번은 " + SysCord<T>.Runner.Hub.Queues.Info.Count.ToString() + "입니다.";
 
                     var botct = Info.Hub.Bots.Count;
                     if (position.Position > botct)
                     {
                         var eta = Info.Hub.Config.Queues.EstimateDelay(position.Position, botct);
-                        embedFtr.Text += $"\nEstimated wait: {eta:F1} minutes.";
+                        embedFtr.Text += $"\n예상 대기 시간은 {eta:F1} 분 입니다.";
                     }
-
-                    embedFtr.IconUrl = "https://raw.githubusercontent.com/PhantomL98/HomeImages/main/approvalspheal.png";
-                    
-                    embedThumbUrl = "https://raw.githubusercontent.com/PhantomL98/HomeImages/main/approvalspheal.png";
                     
                 }
                 else
@@ -179,17 +175,17 @@ namespace SysBot.Pokemon.Discord
                     if (trade.HeldItem > 0)
                         embedTitle += $" ➜ {HeldItem}";
 
-                    embedAuthor = $"{UNick}'s ";
-                    embedAuthor += trade.IsShiny ? "**shiny** " : "";
-                    embedAuthor += "Pokémon:";
+                    embedAuthor = $"{UNick}님의 ";
+                    embedAuthor += trade.IsShiny ? "**이로치** " : "";
+                    embedAuthor += "포켓몬:";
 
-                    embedMsg = $"**Ability:** {(Ability)trade.Ability}";
-                    embedMsg += $"\n**Level:** {trade.CurrentLevel}";
-                    embedMsg += $"\n**Nature:** {(Nature)trade.Nature}";
-                    embedMsg += $"\n**IVs:** {trade.IV_HP}/{trade.IV_ATK}/{trade.IV_DEF}/{trade.IV_SPA}/{trade.IV_SPD}/{trade.IV_SPE}";
-                    embedMsg += $"\n**EVs:** {trade.EV_HP}/{trade.EV_ATK}/{trade.EV_DEF}/{trade.EV_SPA}/{trade.EV_SPD}/{trade.EV_SPE}";
+                    embedMsg = $"**특성:** {(Ability)trade.Ability}";
+                    embedMsg += $"\n**레벨:** {trade.CurrentLevel}";
+                    embedMsg += $"\n**성격:** {(Nature)trade.Nature}";
+                    embedMsg += $"\n**개체값:** {trade.IV_HP}/{trade.IV_ATK}/{trade.IV_DEF}/{trade.IV_SPA}/{trade.IV_SPD}/{trade.IV_SPE}";
+                    embedMsg += $"\n**노력치:** {trade.EV_HP}/{trade.EV_ATK}/{trade.EV_DEF}/{trade.EV_SPA}/{trade.EV_SPD}/{trade.EV_SPE}";
 
-                    embedMsg += $"\n**Moves:**";
+                    embedMsg += $"\n**기술:**";
                     if (trade.Move1 != 0)
                         embedMsg += $"\n- {(Move)trade.Move1}";
                     if (trade.Move2 != 0)
@@ -199,26 +195,26 @@ namespace SysBot.Pokemon.Discord
                     if (trade.Move4 != 0)
                         embedMsg += $"\n- {(Move)trade.Move4}";
                     
-                    embedMsg += $"\n\n{trader.Mention} - Added to the LinkTrade queue.\n\n";
-                    embedMsg += $"Your cooldown of **{SysCordSettings.HubConfig.TradeAbuse.TradeCooldown}** mins will start once the trade completes\n\n";
-                    embedMsg += $"Thank you come again!";
+                    embedMsg += $"\n\n{trader.Mention} - **통신교환 대기열에 성공적으로 추가되었습니다.**\n\n";
+                    embedMsg += $"당신은 **{SysCordSettings.HubConfig.TradeAbuse.TradeCooldown}**분의 쿨다운이 지나면 교환을 다시 시작할 수 있습니다.\n\n";
+                    embedMsg += $"또 이용해 주세요";
 
-                    embedAuthorBuild.IconUrl = "https://raw.githubusercontent.com/PhantomL98/HomeImages/main/Ballimg/50x50/" + ((Ball)trade.Ball).ToString().ToLower() + "ball.png";
+                    embedAuthorBuild.IconUrl = "https://github.com/BUMTJ/HomeImages/tree/1d632c26fe6d8b693247e9694d0ffb579f2cf8a3/Ballimg/50x50" + ((Ball)trade.Ball).ToString().ToLower() + "ball.png";
                     embedAuthorBuild.Name = embedAuthor;
                     
                     embedMsgColor = new Color((uint)Enum.Parse(typeof(embedColor), Enum.GetName(typeof(Ball), trade.Ball)));
 
-                    embedFtr.Text = $"Current Position: " + SysCord<T>.Runner.Hub.Queues.Info.Count.ToString();
+                    embedFtr.Text = $"현재 대기열 순번은: " + SysCord<T>.Runner.Hub.Queues.Info.Count.ToString() + "입니다\n개인 DM을 확인해주세요!";
 
                     var botct = Info.Hub.Bots.Count;
                     if (position.Position > botct)
                     {
                         var eta = Info.Hub.Config.Queues.EstimateDelay(position.Position, botct);
-                        embedFtr.Text += $"\nEstimated wait: {eta:F1} minutes.";
+                        embedFtr.Text += $"\n예상 대기 시간은 {eta:F1}분 입니다.";
                     }
-                    embedFtr.IconUrl = "https://raw.githubusercontent.com/PhantomL98/HomeImages/main/approvalspheal.png";
+                    embedFtr.IconUrl = "https://github.com/BUMTJ/HomeImages/blob/1d632c26fe6d8b693247e9694d0ffb579f2cf8a3/approvalspheal.png";
 
-                    string URLStart = "https://raw.githubusercontent.com/PhantomL98/HomeImages/main/Sprites/200x200/poke_capture";
+                    string URLStart = "https://github.com/BUMTJ/HomeImages/tree/1d632c26fe6d8b693247e9694d0ffb579f2cf8a3/Sprites/200x200/poke_capture";
                     string URLGender;
                     string URLGMax = CanGMax ? "g" : "n";
                     string URLShiny = trade.IsShiny ? "r.png" : "n.png";
@@ -275,7 +271,7 @@ namespace SysBot.Pokemon.Discord
                 await context.Channel.SendMessageAsync("", false, builder.Build()).ConfigureAwait(false);
 
                 // Notify in PM to mirror what is said in the channel.
-                await trader.SendMessageAsync($"{msg}\nYour trade code will be **{code:0000 0000}**.").ConfigureAwait(false);
+                await trader.SendMessageAsync($"{msg}\n통신 교환 코드는 **{code:0000 0000}** 입니다.").ConfigureAwait(false);
 
                 // Clean Up
                 if (result)
@@ -318,7 +314,7 @@ namespace SysBot.Pokemon.Discord
 
             if (added == QueueResultAdd.AlreadyInQueue)
             {
-                msg = "Sorry, you are already in the queue.";
+                msg = "죄송합니다, 당신은 이미 대기열에 있습니다.";
                 return false;
             }
 
@@ -330,14 +326,14 @@ namespace SysBot.Pokemon.Discord
 
             var pokeName = "";
             if (t == PokeTradeType.Specific && pk.Species != 0)
-                pokeName = $" Receiving: {GameInfo.GetStrings(1).Species[pk.Species]}.";
-            msg = $"{user.Mention} - Added to the {type} queue{ticketID}. Current Position: {position.Position}.{pokeName}";
+                pokeName = $" 받으실 포켓몬은: {GameInfo.GetStrings(1).Species[pk.Species]}입니다.";
+            msg = $"{user.Mention} - Added to the {type} queue{ticketID}. 현재 대기열 순번은: {position.Position}입니다.{pokeName}";
 
             var botct = Info.Hub.Bots.Count;
             if (position.Position > botct)
             {
                 var eta = Info.Hub.Config.Queues.EstimateDelay(position.Position, botct);
-                msg += $" Estimated: {eta:F1} minutes.";
+                msg += $" 예상 대기 시간은 {eta:F1} 분 입니다.";
             }
             return true;
         }
@@ -369,13 +365,13 @@ namespace SysBot.Pokemon.Discord
                 case DiscordErrorCode.CannotSendMessageToUser:
                     {
                         // The user either has DMs turned off, or Discord thinks they do.
-                        message = context.User == trader ? "You must enable private messages in order to be queued!" : "The mentioned user must enable private messages in order for them to be queued!";
+                        message = context.User == trader ? "포켓몬 교환을 이용하시려면 개인 메시지를 활성화 해야합니다!" : "해당 사용자가 개인 메시지를 활성화해야 대기열에 추가할 수 있습니다.";
                     }
                     break;
                 default:
                     {
                         // Send a generic error message.
-                        message = ex.DiscordCode != null ? $"Discord error {(int)ex.DiscordCode}: {ex.Reason}" : $"Http error {(int)ex.HttpCode}: {ex.Message}";
+                        message = ex.DiscordCode != null ? $"디스코드 오류 {(int)ex.DiscordCode}: {ex.Reason}" : $"HTTP 오류 {(int)ex.HttpCode}: {ex.Message}";
                     }
                     break;
             }

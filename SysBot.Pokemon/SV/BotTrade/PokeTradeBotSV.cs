@@ -214,11 +214,11 @@ namespace SysBot.Pokemon
             {
                 detail.IsRetry = true;
                 Hub.Queues.Enqueue(type, detail, Math.Min(priority, PokeTradePriorities.Tier2));
-                detail.SendNotification(this, "Oops! Something happened. I'll requeue you for another attempt.");
+                detail.SendNotification(this, "이런! 문제가 발생했습니다. 다른 교환을 요청하세요.");
             }
             else
             {
-                detail.SendNotification(this, $"Oops! Something happened. Canceling the trade: {result}.");
+                detail.SendNotification(this, $"이런! 문제가 발생했습니다. 거래 취소: {result}.");
                 detail.TradeCanceled(this, result);
             }
         }
@@ -310,7 +310,7 @@ namespace SysBot.Pokemon
                     Log("Failed to recover to portal.");
                     await RecoverToOverworld(token).ConfigureAwait(false);
                 }
-                return PokeTradeResult.NoTrainerFound;
+                return PokeTradeResult.트레이너를찾지못했습니다;
             }
 
             Hub.Config.Stream.EndEnterCode(this);
@@ -336,7 +336,7 @@ namespace SysBot.Pokemon
             var tradePartner = await GetTradePartnerInfo(token).ConfigureAwait(false);
             var trainerNID = await GetTradePartnerNID(TradePartnerNIDOffset, token).ConfigureAwait(false);
             RecordUtil<PokeTradeBotSWSH>.Record($"Initiating\t{trainerNID:X16}\t{tradePartner.TrainerName}\t{poke.Trainer.TrainerName}\t{poke.Trainer.ID}\t{poke.ID}\t{toSend.EncryptionConstant:X8}");
-            Log($"Found Link Trade partner: {tradePartner.TrainerName}-{tradePartner.TID7} (ID: {trainerNID})");
+            Log($"트레이너를 찾았습니다: {tradePartner.TrainerName}-{tradePartner.TID7} (ID: {trainerNID})");
 
             var partnerCheck = await CheckPartnerReputation(this, poke, trainerNID, tradePartner.TrainerName, AbuseSettings, token);
             if (partnerCheck != PokeTradeResult.Success)
@@ -352,10 +352,10 @@ namespace SysBot.Pokemon
             if (!tradeOffered)
             {
                 await ExitTradeToPortal(false, token).ConfigureAwait(false);
-                return PokeTradeResult.TrainerTooSlow;
+                return PokeTradeResult.트레이너가느립니다;
             }
 
-            poke.SendNotification(this, $"Found Link Trade partner: {tradePartner.TrainerName}. Here are your details:\r\nNID: {trainerNID}\r\nTID: {tradePartner.TID7:D6}\r\nSID: {tradePartner.SID7:D4}\r\nWaiting for a Pokémon...");
+            poke.SendNotification(this, $"교환 상대를 찾았습니다: {tradePartner.TrainerName}. 여기 데이터가 있습니다:\r\nNID: {trainerNID}\r\nTID: {tradePartner.TID7:D6}\r\nSID: {tradePartner.SID7:D4}\r\n포켓몬을 교환을 기다리는 중...");
 
             if (poke.Type == PokeTradeType.Dump)
             {
@@ -371,7 +371,7 @@ namespace SysBot.Pokemon
             {
                 Log("Trade ended because a valid Pokémon was not offered.");
                 await ExitTradeToPortal(false, token).ConfigureAwait(false);
-                return PokeTradeResult.TrainerTooSlow;
+                return PokeTradeResult.트레이너가느립니다;
             }
 
             PokeTradeResult update;
@@ -406,7 +406,7 @@ namespace SysBot.Pokemon
             {
                 Log("User did not complete the trade.");
                 await ExitTradeToPortal(false, token).ConfigureAwait(false);
-                return PokeTradeResult.TrainerTooSlow;
+                return PokeTradeResult.트레이너가느립니다;
             }
 
             // As long as we got rid of our inject in b1s1, assume the trade went through.
@@ -441,7 +441,7 @@ namespace SysBot.Pokemon
                 var subfolder = poke.Type.ToString().ToLower();
                 DumpPokemon(DumpSetting.DumpFolder, subfolder, received); // received by bot
                 if (poke.Type is PokeTradeType.Specific or PokeTradeType.Clone)
-                    DumpPokemon(DumpSetting.DumpFolder, "traded", toSend); // sent to partner
+                    DumpPokemon(DumpSetting.DumpFolder, "거래된", toSend); // sent to partner
             }
         }
 
@@ -454,11 +454,11 @@ namespace SysBot.Pokemon
             for (int i = 0; i < Hub.Config.Trade.MaxTradeConfirmTime; i++)
             {
                 if (await IsUserBeingShifty(detail, token).ConfigureAwait(false))
-                    return PokeTradeResult.SuspiciousActivity;
+                    return PokeTradeResult.의심스러운활동;
 
                 // We can fall out of the box if the user offers, then quits.
                 if (!await IsInBox(PortalOffset, token).ConfigureAwait(false))
-                    return PokeTradeResult.TrainerLeft;
+                    return PokeTradeResult.트레이너가떠남;
 
                 await Click(A, 1_000, token).ConfigureAwait(false);
 
@@ -471,7 +471,7 @@ namespace SysBot.Pokemon
                 }
             }
             // If we don't detect a B1S1 change, the trade didn't go through in that time.
-            return PokeTradeResult.TrainerTooSlow;
+            return PokeTradeResult.트레이너가느립니다;
         }
 
         // Upon connecting, their Nintendo ID will instantly update.
@@ -788,17 +788,17 @@ namespace SysBot.Pokemon
                 var ot_gender = pk.OT_Gender == 0 ? "Male" : "Female";
                 var tid = pk.GetDisplayTID().ToString(pk.GetTrainerIDFormat().GetTrainerIDFormatStringTID());
                 var sid = pk.GetDisplaySID().ToString(pk.GetTrainerIDFormat().GetTrainerIDFormatStringSID());
-                msg += $"\n**Trainer Data**\n```OT: {ot}\nOTGender: {ot_gender}\nTID: {tid}\nSID: {sid}```";
+                msg += $"\n**트레이너 데이터**\n```OT: {ot}\nOTGender: {ot_gender}\nTID: {tid}\nSID: {sid}```";
 
                 // Extra information for shiny eggs, because of people dumping to skip hatching.
                 var eggstring = pk.IsEgg ? "Egg " : string.Empty;
-                msg += pk.IsShiny ? $"\n**This Pokémon {eggstring}is shiny!**" : string.Empty;
+                msg += pk.IsShiny ? $"\n**이 포켓몬의 {eggstring}은 이로치입니다!**" : string.Empty;
                 detail.SendNotification(this, pk, msg);
             }
 
             Log($"Ended Dump loop after processing {ctr} Pokémon.");
             if (ctr == 0)
-                return PokeTradeResult.TrainerTooSlow;
+                return PokeTradeResult.트레이너가느립니다;
 
             TradeSettings.AddCompletedDumps();
             detail.Notifier.SendNotification(this, detail, $"Dumped {ctr} Pokémon.");
@@ -839,24 +839,24 @@ namespace SysBot.Pokemon
 
                 var report = la.Report();
                 Log(report);
-                poke.SendNotification(this, "This Pokémon is not legal per PKHeX's legality checks. I am forbidden from cloning this. Exiting trade.");
+                poke.SendNotification(this, "이 포켓몬은 자동 합법성 검사에 따르면 합법적이지 않습니다. 거래를 종료합니다.");
                 poke.SendNotification(this, report);
 
-                return (offered, PokeTradeResult.IllegalTrade);
+                return (offered, PokeTradeResult.불법거래);
             }
 
             var clone = offered.Clone();
             if (Hub.Config.Legality.ResetHOMETracker)
                 clone.Tracker = 0;
 
-            poke.SendNotification(this, $"**Cloned your {GameInfo.GetStrings(1).Species[clone.Species]}!**\nNow press B to cancel your offer and trade me a Pokémon you don't want.");
+            poke.SendNotification(this, $"**당신의 클론 {GameInfo.GetStrings(1).Species[clone.Species]}을 복제했습니다.!**\n이제 B를 눌러 제안을 취소하고 원하지 않는 포켓몬으로 교환하세요.");
             Log($"Cloned a {GameInfo.GetStrings(1).Species[clone.Species]}. Waiting for user to change their Pokémon...");
 
             // Separate this out from WaitForPokemonChanged since we compare to old EC from original read.
             var partnerFound = await ReadUntilChanged(TradePartnerOfferedOffset, oldEC, 15_000, 0_200, false, true, token).ConfigureAwait(false);
             if (!partnerFound)
             {
-                poke.SendNotification(this, "**HEY CHANGE IT NOW OR I AM LEAVING!!!**");
+                poke.SendNotification(this, "**빨리 바꿔, 아니면 떠날거야!!!**");
                 // They get one more chance.
                 partnerFound = await ReadUntilChanged(TradePartnerOfferedOffset, oldEC, 15_000, 0_200, false, true, token).ConfigureAwait(false);
             }
@@ -865,7 +865,7 @@ namespace SysBot.Pokemon
             if (!partnerFound || pk2 is null || SearchUtil.HashByDetails(pk2) == SearchUtil.HashByDetails(offered))
             {
                 Log("Trade partner did not change their Pokémon.");
-                return (offered, PokeTradeResult.TrainerTooSlow);
+                return (offered, PokeTradeResult.트레이너가느립니다);
             }
 
             await Click(A, 0_800, token).ConfigureAwait(false);
@@ -883,25 +883,25 @@ namespace SysBot.Pokemon
             {
                 if (trade.Type == LedyResponseType.AbuseDetected)
                 {
-                    var msg = $"Found {partner.TrainerName} has been detected for abusing Ledy trades.";
+                    var msg = $"{partner.TrainerName} 가 교환을 남용한 것을 확인했습니다.";
                     if (AbuseSettings.EchoNintendoOnlineIDLedy)
                         msg += $"\nID: {partner.TrainerOnlineID}";
                     if (!string.IsNullOrWhiteSpace(AbuseSettings.LedyAbuseEchoMention))
                         msg = $"{AbuseSettings.LedyAbuseEchoMention} {msg}";
                     EchoUtil.Echo(msg);
 
-                    return (toSend, PokeTradeResult.SuspiciousActivity);
+                    return (toSend, PokeTradeResult.의심스러운활동);
                 }
 
                 toSend = trade.Receive;
                 poke.TradeData = toSend;
 
-                poke.SendNotification(this, "Injecting the requested Pokémon.");
+                poke.SendNotification(this, "요청한 포켓몬을 넣겠습니다.");
                 await SetBoxPokemonAbsolute(BoxStartOffset, toSend, token, sav).ConfigureAwait(false);
             }
             else if (config.LedyQuitIfNoMatch)
             {
-                return (toSend, PokeTradeResult.TrainerRequestBad);
+                return (toSend, PokeTradeResult.트레이너요청이잘못됨);
             }
 
             return (toSend, PokeTradeResult.Success);

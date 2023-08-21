@@ -161,12 +161,12 @@ namespace SysBot.Pokemon
                 if (cln.HeldItem > -1 && cln.Species != (ushort)Species.Finizen) cln.SetDefaultNickname(); //Block nickname clear for item distro, Change Species as needed.
                 if (cln.HeldItem > 0 && cln.RibbonMarkDestiny == true) cln.SetDefaultNickname();
 
-                msg += $"OT_Name: {cln.OT_Name}\r\n";
+                msg += $"OT: {cln.OT_Name}\r\n";
                 msg += $"TID: {cln.TrainerTID7}\r\n";
                 msg += $"SID: {cln.TrainerSID7}\r\n";
-                msg += $"Gender: {(Gender)cln.OT_Gender}\r\n";
-                msg += $"Language: {(LanguageID)(cln.Language)}\r\n";
-                msg += $"Game: {(GameVersion)(cln.Version)}\r\n";
+                msg += $"성별: {(Gender)cln.OT_Gender}\r\n";
+                msg += $"국적: {(LanguageID)(cln.Language)}\r\n";
+                msg += $"게임: {(GameVersion)(cln.Version)}\r\n";
 
                 Log(msg);
 

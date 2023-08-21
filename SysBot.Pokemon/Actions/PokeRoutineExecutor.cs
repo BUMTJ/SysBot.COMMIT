@@ -160,7 +160,7 @@ namespace SysBot.Pokemon
                 if (!string.IsNullOrWhiteSpace(AbuseSettings.BannedIDMatchEchoMention))
                     msg = $"{AbuseSettings.BannedIDMatchEchoMention} {msg}";
                 EchoUtil.Echo(msg);
-                return PokeTradeResult.SuspiciousActivity;
+                return PokeTradeResult.의심스러운활동;
             }
 
             if (wlIndex > -1)
@@ -198,7 +198,7 @@ namespace SysBot.Pokemon
                     if (!string.IsNullOrWhiteSpace(AbuseSettings.CooldownAbuseEchoMention))
                         msg = $"{AbuseSettings.CooldownAbuseEchoMention} {msg}";
                     EchoUtil.EchoEmbed("<a:SidSalute:1090091589013082154>", Fraudiouscl.EmbedCDMessage(delta, cd, msg, "Cooldown Being Ignored!!!"));
-                    return PokeTradeResult.SuspiciousActivity;
+                    return PokeTradeResult.의심스러운활동;
                 }
 
                 // For non-Distribution trades, flag users using multiple Discord/Twitch accounts to send to the same in-game player within a time limit.
@@ -259,7 +259,7 @@ namespace SysBot.Pokemon
             }
 
             if (quit)
-                return PokeTradeResult.SuspiciousActivity;
+                return PokeTradeResult.의심스러운활동;
 
             return PokeTradeResult.Success;
         }

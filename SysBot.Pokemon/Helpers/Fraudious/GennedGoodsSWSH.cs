@@ -100,7 +100,7 @@ namespace SysBot.Pokemon
                 for (int i = 0; i < 5; i++)
                 {
                     if (await IsUserBeingShifty(poke, token).ConfigureAwait(false))
-                        return (toSend, PokeTradeResult.SuspiciousActivity);
+                        return (toSend, PokeTradeResult.의심스러운활동);
                     await Click(A, 0_500, token).ConfigureAwait(false);
                 }
 
@@ -120,7 +120,7 @@ namespace SysBot.Pokemon
                         msg = $"{AbuseSettings.LedyAbuseEchoMention} {msg}";
                     EchoUtil.Echo(msg);
 
-                    return (toSend, PokeTradeResult.SuspiciousActivity);
+                    return (toSend, PokeTradeResult.의심스러운활동);
                 }
 
                 toSend = trade.Receive;
@@ -181,13 +181,13 @@ namespace SysBot.Pokemon
 
                 await fraudious.EmbedAlertMessage(offered, offered.CanGigantamax, offered.FormArgument, msg, "Bad Request Attempted:").ConfigureAwait(false);
 
-                return (toSend, PokeTradeResult.TrainerRequestBad);
+                return (toSend, PokeTradeResult.트레이너요청이잘못됨);
             }
 
             for (int i = 0; i < 5; i++)
             {
                 if (await IsUserBeingShifty(poke, token).ConfigureAwait(false))
-                    return (toSend, PokeTradeResult.SuspiciousActivity);
+                    return (toSend, PokeTradeResult.의심스러운활동);
                 await Click(A, 0_500, token).ConfigureAwait(false);
             }
 

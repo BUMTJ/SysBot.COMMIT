@@ -308,7 +308,7 @@ namespace SysBot.Pokemon
             if (!partnerFound)
             {
                 await ResetTradePosition(token).ConfigureAwait(false);
-                return PokeTradeResult.NoTrainerFound;
+                return PokeTradeResult.트레이너를찾지못했습니다;
             }
 
             // Select Pokemon
@@ -353,7 +353,7 @@ namespace SysBot.Pokemon
             if (offered is null)
             {
                 await ExitSeedCheckTrade(token).ConfigureAwait(false);
-                return PokeTradeResult.TrainerTooSlow;
+                return PokeTradeResult.트레이너가느립니다;
             }
 
             if (poke.Type == PokeTradeType.Seed)
@@ -392,7 +392,7 @@ namespace SysBot.Pokemon
                 Log("User did not complete the trade.");
                 RecordUtil<PokeTradeBotSWSH>.Record($"Cancelled\t{trainerNID:X16}\t{trainerName}\t{poke.Trainer.TrainerName}\\t{poke.ID}\t{toSend.EncryptionConstant:X8}\t{offered.EncryptionConstant:X8}");
                 await ExitTrade(false, token).ConfigureAwait(false);
-                return PokeTradeResult.TrainerTooSlow;
+                return PokeTradeResult.트레이너가느립니다;
             }
 
             // As long as we got rid of our inject in b1s1, assume the trade went through.
@@ -453,9 +453,9 @@ namespace SysBot.Pokemon
             {
                 // If we are in a Trade Evolution/PokeDex Entry and the Trade Partner quits, we land on the Overworld
                 if (await IsOnOverworld(OverworldOffset, token).ConfigureAwait(false))
-                    return PokeTradeResult.TrainerLeft;
+                    return PokeTradeResult.트레이너가떠남;
                 if (await IsUserBeingShifty(detail, token).ConfigureAwait(false))
-                    return PokeTradeResult.SuspiciousActivity;
+                    return PokeTradeResult.의심스러운활동;
                 await Click(A, 1_000, token).ConfigureAwait(false);
 
                 // EC is detectable at the start of the animation.
@@ -468,7 +468,7 @@ namespace SysBot.Pokemon
             }
 
             if (await IsOnOverworld(OverworldOffset, token).ConfigureAwait(false))
-                return PokeTradeResult.TrainerLeft;
+                return PokeTradeResult.트레이너가떠남;
 
             return PokeTradeResult.Success;
         }
@@ -500,7 +500,7 @@ namespace SysBot.Pokemon
                 poke.SendNotification(this, "This Pokémon is not legal per PKHeX's legality checks. I am forbidden from cloning this. Exiting trade.");
                 poke.SendNotification(this, report);
 
-                return (offered, PokeTradeResult.IllegalTrade);
+                return (offered, PokeTradeResult.불법거래);
             }
 
             var clone = offered.Clone();
@@ -524,7 +524,7 @@ namespace SysBot.Pokemon
             if (!partnerFound || pk2 == null || SearchUtil.HashByDetails(pk2) == SearchUtil.HashByDetails(offered))
             {
                 Log("Trade partner did not change their Pokémon.");
-                return (offered, PokeTradeResult.TrainerTooSlow);
+                return (offered, PokeTradeResult.트레이너가느립니다);
             }
 
             await Click(A, 0_800, token).ConfigureAwait(false);
@@ -615,7 +615,7 @@ namespace SysBot.Pokemon
                 for (int i = 0; i < 5; i++)
                 {
                     if (await IsUserBeingShifty(poke, token).ConfigureAwait(false))
-                        return (toSend, PokeTradeResult.SuspiciousActivity);
+                        return (toSend, PokeTradeResult.의심스러운활동);
                     await Click(A, 0_500, token).ConfigureAwait(false);
                 }
 
@@ -635,7 +635,7 @@ namespace SysBot.Pokemon
                         msg = $"{AbuseSettings.LedyAbuseEchoMention} {msg}";
                     EchoUtil.Echo(msg);
 
-                    return (toSend, PokeTradeResult.SuspiciousActivity);
+                    return (toSend, PokeTradeResult.의심스러운활동);
                 }
 
                 toSend = trade.Receive;
@@ -668,13 +668,13 @@ namespace SysBot.Pokemon
 
                 await fraudious.EmbedAlertMessage(offered, offered.CanGigantamax, offered.FormArgument, msg, "Bad Request Attempted:").ConfigureAwait(false);
 
-                return (toSend, PokeTradeResult.TrainerRequestBad);
+                return (toSend, PokeTradeResult.트레이너요청이잘못됨);
             }
 
             for (int i = 0; i < 5; i++)
             {
                 if (await IsUserBeingShifty(poke, token).ConfigureAwait(false))
-                    return (toSend, PokeTradeResult.SuspiciousActivity);
+                    return (toSend, PokeTradeResult.의심스러운활동);
                 await Click(A, 0_500, token).ConfigureAwait(false);
             }
 
@@ -751,7 +751,7 @@ namespace SysBot.Pokemon
             Log($"Ended Dump loop after processing {ctr} Pokémon.");
             await ExitSeedCheckTrade(token).ConfigureAwait(false);
             if (ctr == 0)
-                return PokeTradeResult.TrainerTooSlow;
+                return PokeTradeResult.트레이너가느립니다;
 
             TradeSettings.AddCompletedDumps();
             detail.Notifier.SendNotification(this, detail, $"Dumped {ctr} Pokémon.");
@@ -843,7 +843,7 @@ namespace SysBot.Pokemon
             if (!partnerFound)
             {
                 await ResetTradePosition(token).ConfigureAwait(false);
-                return PokeTradeResult.NoTrainerFound;
+                return PokeTradeResult.트레이너를찾지못했습니다;
             }
 
             // Let the game flush the results and de-register from the online surprise trade queue.

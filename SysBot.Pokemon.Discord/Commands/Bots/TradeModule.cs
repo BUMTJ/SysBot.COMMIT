@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace SysBot.Pokemon.Discord
 {
-    [Summary("Queues new Link Code trades")]
+    [Summary("새 링크 코드 거래 대기열")]
     public class TradeModule<T> : ModuleBase<SocketCommandContext> where T : PKM, new()
     {
         private static TradeQueueInfo<T> Info => SysCord<T>.Runner.Hub.Queues.Info;
 
         [Command("tradeList")]
         [Alias("tl")]
-        [Summary("Prints the users in the trade queues.")]
+        [Summary("통신 교환에 있는 트레이너를 인쇄합니다.")]
         [RequireSudo]
         public async Task GetTradeListAsync()
         {
@@ -28,12 +28,12 @@ namespace SysBot.Pokemon.Discord
                 x.Value = msg;
                 x.IsInline = false;
             });
-            await ReplyAsync("These are the users who are currently waiting:", embed: embed.Build()).ConfigureAwait(false);
+            await ReplyAsync("현재 대기 중인 사용자는 다음과 같습니다:", embed: embed.Build()).ConfigureAwait(false);
         }
 
         [Command("trade")]
         [Alias("t")]
-        [Summary("Makes the bot trade you the provided Pokémon file.")]
+        [Summary("봇이 제공된 포켓몬 파일을 교환하도록 합니다.")]
         [RequireQueueRole(nameof(DiscordManager.RolesTrade))]
         public async Task TradeAsyncAttach([Summary("Trade Code")] int code)
         {
@@ -43,16 +43,16 @@ namespace SysBot.Pokemon.Discord
 
         [Command("trade")]
         [Alias("t")]
-        [Summary("Makes the bot trade you a Pokémon converted from the provided Showdown Set.")]
+        [Summary("봇이 제공된 쇼다운 세트로 제작된 포켓몬을 교환하도록 합니다.")]
         [RequireQueueRole(nameof(DiscordManager.RolesTrade))]
-        public async Task TradeAsync([Summary("Trade Code")] int code, [Summary("Showdown Set")][Remainder] string content)
+        public async Task TradeAsync([Summary("교환 코드")] int code, [Summary("쇼다운 세트")][Remainder] string content)
         {
             content = ReusableActions.StripCodeBlock(content);
             var set = new ShowdownSet(content);
             var template = AutoLegalityWrapper.GetTemplate(set);
             if (set.InvalidLines.Count != 0)
             {
-                var msg = $"Unable to parse Showdown Set:\n{string.Join("\n", set.InvalidLines)}";
+                var msg = $"쇼다운 세트 구문을 분석할 수 없습니다:\n{string.Join("\n", set.InvalidLines)}";
                 await ReplyAsync(msg).ConfigureAwait(false);
                 return;
             }
@@ -66,9 +66,9 @@ namespace SysBot.Pokemon.Discord
                 pkm = EntityConverter.ConvertToType(pkm, typeof(T), out _) ?? pkm;
                 if (pkm is not T pk || !la.Valid)
                 {
-                    var reason = result == "Timeout" ? $"That {spec} set took too long to generate." : result == "VersionMismatch" ? "Request refused: PKHeX and Auto-Legality Mod version mismatch." : $"I wasn't able to create a {spec} from that set.";
-                    var imsg = $"Oops! {reason}";
-                    if (result == "Failed")
+                    var reason = result == "시간초과" ? $"해당 {spec} 세트를 생성하는데 너무 오래 걸렸습니다." : result == "버전 불일치" ? "요청 거부: 자동 합법성 모드 버전이 일치하지 않습니다." : $"해당{spec} 세트를 생성할 수 없습니다.";
+                    var imsg = $"이런! {reason}";
+                    if (result == "실패")
                         imsg += $"\n{AutoLegalityWrapper.GetLegalizationHint(template, sav, pkm)}";
                     await ReplyAsync(imsg).ConfigureAwait(false);
                     return;
@@ -81,14 +81,14 @@ namespace SysBot.Pokemon.Discord
             catch (Exception ex)
             {
                 LogUtil.LogSafe(ex, nameof(TradeModule<T>));
-                var msg = $"Oops! An unexpected problem happened with this Showdown Set:\n```{string.Join("\n", set.GetSetLines())}```";
+                var msg = $"이런! 해당 쇼다운 세트에서 예기치 않은 문제가 발생했습니다:\n```{string.Join("\n", set.GetSetLines())}```";
                 await ReplyAsync(msg).ConfigureAwait(false);
             }
         }
 
         [Command("trade")]
         [Alias("t")]
-        [Summary("Makes the bot trade you a Pokémon converted from the provided Showdown Set.")]
+        [Summary("봇이 제공된 쇼다운 텍스트로 만든 포켓몬을 거래합니다.")]
         [RequireQueueRole(nameof(DiscordManager.RolesTrade))]
         public async Task TradeAsync([Summary("Showdown Set")][Remainder] string content)
         {
@@ -98,7 +98,7 @@ namespace SysBot.Pokemon.Discord
 
         [Command("trade")]
         [Alias("t")]
-        [Summary("Makes the bot trade you the attached file.")]
+        [Summary("봇이 제공된 포켓몬 파일을 교환하도록 합니다.")]
         [RequireQueueRole(nameof(DiscordManager.RolesTrade))]
         public async Task TradeAsyncAttach()
         {

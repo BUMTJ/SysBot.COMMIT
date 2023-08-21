@@ -13,7 +13,7 @@ namespace SysBot.Pokemon.Discord
         {
             if (set.Species <= 0)
             {
-                await channel.SendMessageAsync("Oops! I wasn't able to interpret your message! If you intended to convert something, please double check what you're pasting!").ConfigureAwait(false);
+                await channel.SendMessageAsync("이런! 보내주신 메시지를 해석할 수 없었습니다! 만약 무언가를 변환하려고 했다면, 붙여넣고 있는 것을 다시 한번 확인해 주세요!").ConfigureAwait(false);
                 return;
             }
 
@@ -25,21 +25,21 @@ namespace SysBot.Pokemon.Discord
                 var spec = GameInfo.Strings.Species[template.Species];
                 if (!la.Valid)
                 {
-                    var reason = result == "Timeout" ? $"That {spec} set took too long to generate." : result == "VersionMismatch" ? "Request refused: PKHeX and Auto-Legality Mod version mismatch." : $"I wasn't able to create a {spec} from that set.";
-                    var imsg = $"Oops! {reason}";
+                    var reason = result == "시간초과" ? $"해당 {spec} 세트를 생성하는데 너무 오래걸렸습니다." : result == "버전 불일치" ? "요청이 거부되었습니다: 자동 합법성 모드 버전이 일치하지 않습니다." : $"해당 {spec} 세트를 생성할 수 없습니다.";
+                    var imsg = $"이런! {reason}";
                     if (result == "Failed")
                         imsg += $"\n{AutoLegalityWrapper.GetLegalizationHint(template, sav, pkm)}";
                     await channel.SendMessageAsync(imsg).ConfigureAwait(false);
                     return;
                 }
 
-                var msg = $"Here's your ({result}) legalized PKM for {spec} ({la.EncounterOriginal.Name})!";
+                var msg = $"여기 ({result}) 자동합법화된 파일입니다. {spec} ({la.EncounterOriginal.Name})!";
                 await channel.SendPKMAsync(pkm, msg + $"\n{ReusableActions.GetFormattedShowdownText(pkm)}").ConfigureAwait(false);
             }
             catch (Exception ex)
             {
                 LogUtil.LogSafe(ex, nameof(AutoLegalityExtensionsDiscord));
-                var msg = $"Oops! An unexpected problem happened with this Showdown Set:\n```{string.Join("\n", set.GetSetLines())}```";
+                var msg = $"이런! 해당 쇼다운 세트에서 예기치 못한 문제가 발생했습니다.:\n```{string.Join("\n", set.GetSetLines())}```";
                 await channel.SendMessageAsync(msg).ConfigureAwait(false);
             }
         }
@@ -72,20 +72,20 @@ namespace SysBot.Pokemon.Discord
             var pkm = download.Data!;
             if (new LegalityAnalysis(pkm).Valid)
             {
-                await channel.SendMessageAsync($"{download.SanitizedFileName}: Already legal.").ConfigureAwait(false);
+                await channel.SendMessageAsync($"{download.SanitizedFileName}: 이미 합법적입니다.").ConfigureAwait(false);
                 return;
             }
 
             var legal = pkm.LegalizePokemon();
             if (!new LegalityAnalysis(legal).Valid)
             {
-                await channel.SendMessageAsync($"{download.SanitizedFileName}: Unable to legalize.").ConfigureAwait(false);
+                await channel.SendMessageAsync($"{download.SanitizedFileName}: 합법화할 수 없습니다..").ConfigureAwait(false);
                 return;
             }
 
             legal.RefreshChecksum();
 
-            var msg = $"Here's your legalized PKM for {download.SanitizedFileName}!\n{ReusableActions.GetFormattedShowdownText(legal)}";
+            var msg = $"여기 합법화된 PKM파일 입니다! {download.SanitizedFileName}!\n{ReusableActions.GetFormattedShowdownText(legal)}";
             await channel.SendPKMAsync(legal, msg).ConfigureAwait(false);
         }
     }
