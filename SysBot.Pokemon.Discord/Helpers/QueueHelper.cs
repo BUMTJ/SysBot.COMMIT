@@ -21,7 +21,7 @@ namespace SysBot.Pokemon.Discord
 
             try
             {
-                const string helper = "대기열에 추가했습니다! 거래가 시작되면 여기에 메시지를 보내겠습니다.";
+                const string helper = "통신교환 대기열에 추가했습니다! 거래가 시작되면 여기에 메시지를 보내겠습니다.";
                 IUserMessage test = await trader.SendMessageAsync(helper).ConfigureAwait(false);
 
                 // Try adding
@@ -56,17 +56,16 @@ namespace SysBot.Pokemon.Discord
             await AddToQueueAsync(context, code, trainer, sig, trade, routine, type, context.User).ConfigureAwait(false);
         }
 
-        private static bool AddToTradeQueue(SocketCommandContext context, T pk, int code, string trainerName, RequestSignificance sig, PokeRoutineType type, PokeTradeType t, SocketUser trader, out Embed embed)
+        private static bool AddToTradeQueue(SocketCommandContext context, T pk, int code, string trainerName, RequestSignificance sig, PokeRoutineType type, PokeTradeType t, SocketUser trader, out string msg)
         {
             var user = trader;
             var userID = user.Id;
             var name = user.Username;
 
-            var trainerInfo = new PokeTradeTrainerInfo(trainerName, userID); // 이름 변경: trainer -> trainerInfo
-            var notifier = new DiscordTradeNotifier<T>(pk, trainerInfo, code, user); // 변경: trainer -> trainerInfo
-            var detail = new PokeTradeDetail<T>(pk, trainerInfo, notifier, t, code, sig == RequestSignificance.Favored); // 변경: trainer -> trainerInfo
+            var trainer = new PokeTradeTrainerInfo(trainerName, userID);
+            var notifier = new DiscordTradeNotifier<T>(pk, trainer, code, user);
+            var detail = new PokeTradeDetail<T>(pk, trainer, notifier, t, code, sig == RequestSignificance.Favored);
             var trade = new TradeEntry<T>(detail, userID, type, name);
-            var embedBuilder = new EmbedBuilder();
 
             var hub = SysCord<T>.Runner.Hub;
             var Info = hub.Queues.Info;
@@ -74,46 +73,28 @@ namespace SysBot.Pokemon.Discord
 
             if (added == QueueResultAdd.AlreadyInQueue)
             {
-                embedBuilder
-                    .WithTitle("Sorry, you are already in the queue.");
-
-                embed = embedBuilder.Build();
-
+                msg = "Sorry, you are already in the queue.";
                 return false;
             }
-                
-                
+
             var position = Info.CheckPosition(userID, type);
 
             var ticketID = "";
             if (TradeStartModule<T>.IsStartChannel(context.Channel.Id))
                 ticketID = $", unique ID: {detail.ID}";
-            
+
             var pokeName = "";
             if (t == PokeTradeType.Specific && pk.Species != 0)
-                pokeName = $" 받으실 포켓몬은 **{GameInfo.GetStrings(1).Species[pk.Species]}** 입니다.";
-    
-            embedBuilder
-                .WithTitle($"{user.Username}님! 통신교환 대기열 등록을 성공하였습니다.")
-                .WithDescription("상세 정보")
-                .AddField(pokeName)
-                .AddField("현재 대기열 순서는", position.Position.ToString()"입니다.")
-                .AddField("개인 DM을 확인하시길 바랍니다.")
-                .WithColor(Color.Green);
-
+                pokeName = $" 받으실 포켓몬은 **{GameInfo.GetStrings(1).Species[pk.Species]}** 입니다.\n해당 통신교환의 현재 대기열 순서는 {position.Position}번 입니다.";
+            msg =  $"{user.Username}님! **통신교환 대기열 등록을 성공하였습니다.**\n\n **상세 정보** \n```{pokeName}```\n개인 DM을 확인하시길 바랍니다.";
             var botct = Info.Hub.Bots.Count;
             if (position.Position > botct)
             {
                 var eta = Info.Hub.Config.Queues.EstimateDelay(position.Position, botct);
-                embedBuilder.AddField("예상 대기 시간은" $"{eta:F1}분 입니다");
+                msg += $" 예상 대기 시간은 {eta:F1}분 입니다.";
             }
-
-            embed = embedBuilder.Build();
-
             return true;
         }
-
-
         private static async Task HandleDiscordExceptionAsync(SocketCommandContext context, SocketUser trader, HttpException ex)
         {
             string message = string.Empty;
